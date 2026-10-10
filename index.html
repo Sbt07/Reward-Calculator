@@ -1,0 +1,739 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quarterly Sales Reward Calculator</title>
+
+<style>
+  
+/* MOBILE-FIRST FIXED DESIGN */
+:root {
+  --primary: #173b66;
+  --primary-light: #eaf2fc;
+  --accent: #f0b429;
+  --background: #f3f6fa;
+  --border: #dce4ee;
+  --text: #253449;
+  --muted: #68788d;
+  --green: #147d54;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 12px;
+  width: 100%;
+  min-width: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Arial, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.header {
+  background: linear-gradient(135deg, #173b66, #285d91);
+  color: white;
+  padding: 20px 17px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.header h1 {
+  font-size: 23px;
+  line-height: 1.25;
+  margin: 0 0 9px;
+}
+
+.header p {
+  color: #dbe9f8;
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 14px;
+  min-width: 0;
+  box-shadow: 0 2px 8px rgba(24, 49, 78, 0.04);
+}
+
+.section-title {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--primary);
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.section-subtitle {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+/* Stack the two editable inputs */
+.input-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 11px;
+}
+
+.input-card {
+  padding: 13px;
+  background: #fffaf0;
+  border: 1.5px solid #efc45d;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.input-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+  margin-bottom: 9px;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  height: 45px;
+  padding: 10px 12px;
+  border: 1px solid #d9b95e;
+  border-radius: 8px;
+  background: white;
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 750;
+  outline: none;
+}
+
+input[type="number"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(23, 59, 102, 0.12);
+}
+
+.unit {
+  font-size: 12px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.hint {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: #88651a;
+}
+
+/* Compact phone-friendly result cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.metric {
+  min-width: 0;
+  padding: 13px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+}
+
+.metric:last-child {
+  grid-column: 1 / -1;
+}
+
+.metric.primary {
+  background: var(--primary-light);
+  border-color: #ccddf3;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.45;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: clamp(21px, 6vw, 27px);
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--primary);
+  overflow-wrap: anywhere;
+}
+
+.metric.primary .metric-value {
+  color: var(--green);
+}
+
+.metric-note {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Fit the reward table within the phone width */
+.table-wrap {
+  width: 100%;
+  overflow: visible;
+}
+
+table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+th {
+  background: #eef3f9;
+  color: var(--primary);
+  font-size: 9px;
+  line-height: 1.35;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 9px 4px;
+  overflow-wrap: anywhere;
+}
+
+td {
+  padding: 10px 4px;
+  border-bottom: 1px solid #e9eef4;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  vertical-align: middle;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  width: 34%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 29%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 15%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 22%;
+  text-align: right;
+}
+
+td:nth-child(3) {
+  color: var(--muted);
+}
+
+td:last-child {
+  font-weight: 750;
+  white-space: normal;
+}
+
+.total-row td {
+  background: #eaf2fc;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.total-row td:last-child {
+  color: var(--green);
+  font-size: 12px;
+}
+
+.coins-row td {
+  background: #fffaf0;
+}
+
+/* Scheme reference */
+.reference-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.reference-item {
+  padding: 12px;
+  background: #fbfcfe;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  min-width: 0;
+}
+
+.reference-item strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.reference-item span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.footer {
+  padding: 5px 8px 15px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Extra-narrow phones */
+@media (max-width: 350px) {
+  body {
+    padding: 8px;
+  }
+
+  .header,
+  .section {
+    padding: 12px;
+  }
+
+  table {
+    font-size: 9px;
+  }
+
+  th {
+    font-size: 8px;
+  }
+
+  td {
+    padding: 8px 3px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <header class="header">
+    <h1>Quarterly Sales Reward Calculator</h1>
+    <p>
+      Enter sales units in the two highlighted fields below.
+      All reward calculations update automatically.
+    </p>
+  </header>
+
+  <section class="section">
+    <h2 class="section-title">Input Sales Units</h2>
+    <p class="section-subtitle">
+      Only these two fields are editable. All other values are calculated automatically.
+    </p>
+
+    <div class="input-grid">
+      <div class="input-card">
+        <label for="premium">1. Premium Category Sales</label>
+        <div class="input-wrap">
+          <input
+            id="premium"
+            type="number"
+            min="0"
+            step="1"
+            value="10"
+            inputmode="numeric"
+            aria-label="Premium category sales units"
+          />
+          <span class="unit">Units</span>
+        </div>
+        <span class="hint">50 reward points per unit</span>
+      </div>
+
+      <div class="input-card">
+        <label for="superPremium">2. Super Premium Category Sales</label>
+        <div class="input-wrap">
+          <input
+            id="superPremium"
+            type="number"
+            min="0"
+            step="1"
+            value="15"
+            inputmode="numeric"
+            aria-label="Super Premium category sales units"
+          />
+          <span class="unit">Units</span>
+        </div>
+        <span class="hint">100 reward points per unit</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="summary-grid">
+    <div class="metric">
+      <div class="metric-label">Total Combined Sales</div>
+      <div class="metric-value" id="totalUnits">25</div>
+      <div class="metric-note">Premium + Super Premium</div>
+    </div>
+
+    <div class="metric primary">
+      <div class="metric-label">Total Reward Points</div>
+      <div class="metric-value" id="totalPoints">1,325</div>
+      <div class="metric-note" id="averagePoints">Average: 53 points/unit</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">PolyRatan Coins</div>
+      <div class="metric-value" id="totalCoins">1,500</div>
+      <div class="metric-note">60 coins per total unit</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Reward Calculation Breakdown</h2>
+    <p class="section-subtitle">
+      Direct points, cumulative telescopic slabs and bonus boosters.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Reward Component</th>
+            <th>Formula / Slab</th>
+            <th>Rate</th>
+            <th>Earned Points</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Premium Direct Base</td>
+            <td id="premiumFormula">10 units × 50</td>
+            <td>50 pts/unit</td>
+            <td id="premiumPoints">500</td>
+          </tr>
+
+          <tr>
+            <td>Super Premium Direct Base</td>
+            <td id="superPremiumFormula">15 units × 100</td>
+            <td>100 pts/unit</td>
+            <td id="superPremiumPoints">1,500</td>
+          </tr>
+
+          <tr>
+            <td>Subtotal Direct Sales Points</td>
+            <td>Sum of direct base</td>
+            <td>—</td>
+            <td id="directSubtotal">2,000</td>
+          </tr>
+
+          <tr>
+            <td>Telescopic Slabs (Tiered)</td>
+            <td id="slabFormula">Slab 15–29</td>
+            <td id="slabRate">50 pts/unit</td>
+            <td id="slabPoints">—</td>
+          </tr>
+
+          <tr>
+            <td>Bonus Booster (Above 100)</td>
+            <td id="boosterFormula">Starts at 101+ units</td>
+            <td id="boosterRate">+0 pts/unit</td>
+            <td id="boosterPoints">0</td>
+          </tr>
+
+          <tr class="total-row">
+            <td>Total Reward Points Earned</td>
+            <td id="averageFormula">Average: 53 pts/unit</td>
+            <td>—</td>
+            <td id="breakdownTotal">1,325</td>
+          </tr>
+
+          <tr class="coins-row">
+            <td>PolyRatan Coins Total</td>
+            <td id="coinsFormula">25 total units × 60</td>
+            <td>60 coins/unit</td>
+            <td id="coinsBreakdown">1,500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Active Master Scheme Reference</h2>
+    <p class="section-subtitle">
+      Fixed scheme rates used by the calculator.
+    </p>
+
+    <div class="reference-grid">
+      <div class="reference-item">
+        <strong>Premium Direct Rate</strong>
+        <span>50 reward points per unit</span>
+      </div>
+
+      <div class="reference-item">
+        <strong>Super Premium Direct Rate</strong>
+        <span>100 reward points per unit</span>
+      </div>
+
+      <div class="reference-item">
+        <strong>Telescopic Reward Slabs</strong>
+        <span>
+          1–14 units: 25 pts/unit<br>
+          15–29 units: 50 pts/unit<br>
+          30–59 units: 75 pts/unit<br>
+          60–99 units: 100 pts/unit<br>
+          100+ units: 150 pts/unit
+        </span>
+      </div>
+
+      <div class="reference-item">
+        <strong>Bonus Booster Slabs</strong>
+        <span>
+          0–100 units: No bonus<br>
+          101–150 units: +25 pts/unit<br>
+          151–200 units: +50 pts/unit<br>
+          201+ units: +75 pts/unit
+        </span>
+      </div>
+
+      <div class="reference-item">
+        <strong>PolyRatan Coin Rate</strong>
+        <span>60 coins per combined sales unit</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    Quarterly Sales Reward Calculator · Values recalculate as you type
+  </div>
+
+</div>
+
+<script>
+  const premiumInput = document.getElementById("premium");
+  const superPremiumInput = document.getElementById("superPremium");
+
+  const numberFormat = new Intl.NumberFormat("en-IN");
+
+  function formatNumber(value) {
+    return numberFormat.format(value);
+  }
+
+  function readUnits(input) {
+    const value = input.valueAsNumber;
+
+    if (!Number.isFinite(value) || value < 0) {
+      return 0;
+    }
+
+    // Sales units must be whole, non-negative numbers.
+    return Math.floor(value);
+  }
+
+  function getSlab(totalUnits) {
+    if (totalUnits === 0) {
+      return { label: "0 units", rate: 0 };
+    }
+
+    if (totalUnits <= 14) {
+      return { label: "Slab 1–14", rate: 25 };
+    }
+
+    if (totalUnits <= 29) {
+      return { label: "Slab 15–29", rate: 50 };
+    }
+
+    if (totalUnits <= 59) {
+      return { label: "Slab 30–59", rate: 75 };
+    }
+
+    if (totalUnits <= 99) {
+      return { label: "Slab 60–99", rate: 100 };
+    }
+
+    return { label: "Slab 100+", rate: 150 };
+  }
+
+  // Telescopic points are calculated cumulatively:
+  // first 14 at 25, next 15 at 50, next 30 at 75,
+  // next 40 at 100, and units above 99 at 150.
+  function calculateTelescopicPoints(units) {
+    return (
+      Math.min(14, units) * 25 +
+      Math.min(15, Math.max(0, units - 14)) * 50 +
+      Math.min(30, Math.max(0, units - 29)) * 75 +
+      Math.min(40, Math.max(0, units - 59)) * 100 +
+      Math.max(0, units - 99) * 150
+    );
+  }
+
+  function calculateBooster(units) {
+    if (units <= 100) {
+      return {
+        formula: "Starts at 101+ units",
+        rate: 0,
+        points: 0
+      };
+    }
+
+    let rate;
+    let tier;
+
+    if (units <= 150) {
+      rate = 25;
+      tier = "Tier 101–150";
+    } else if (units <= 200) {
+      rate = 50;
+      tier = "Tier 151–200";
+    } else {
+      rate = 75;
+      tier = "Tier 201+";
+    }
+
+    return {
+      formula: `${tier} (${units - 100} units)`,
+      rate: rate,
+      points: (units - 100) * rate
+    };
+  }
+
+  function updateCalculator() {
+    const premium = readUnits(premiumInput);
+    const superPremium = readUnits(superPremiumInput);
+
+    const totalUnits = premium + superPremium;
+    const premiumPoints = premium * 50;
+    const superPremiumPoints = superPremium * 100;
+
+    const directSubtotal = premiumPoints + superPremiumPoints;
+
+    const slab = getSlab(totalUnits);
+    const slabPoints = calculateTelescopicPoints(totalUnits);
+    const booster = calculateBooster(totalUnits);
+
+    const totalPoints =
+      directSubtotal + slabPoints + booster.points;
+
+    const averagePoints =
+      totalUnits > 0
+        ? Math.round(totalPoints / totalUnits)
+        : null;
+
+    const coins = totalUnits * 60;
+
+    // Summary cards
+    document.getElementById("totalUnits").textContent =
+      formatNumber(totalUnits);
+
+    document.getElementById("totalPoints").textContent =
+      formatNumber(totalPoints);
+
+    document.getElementById("averagePoints").textContent =
+      averagePoints === null
+        ? "Average: —"
+        : `Average: ${formatNumber(averagePoints)} points/unit`;
+
+    document.getElementById("totalCoins").textContent =
+      formatNumber(coins);
+
+    // Direct reward components
+    document.getElementById("premiumFormula").textContent =
+      `${premium} units × 50`;
+
+    document.getElementById("premiumPoints").textContent =
+      formatNumber(premiumPoints);
+
+    document.getElementById("superPremiumFormula").textContent =
+      `${superPremium} units × 100`;
+
+    document.getElementById("superPremiumPoints").textContent =
+      formatNumber(superPremiumPoints);
+
+    document.getElementById("directSubtotal").textContent =
+      formatNumber(directSubtotal);
+
+    // Telescopic slab
+    document.getElementById("slabFormula").textContent =
+      slab.label;
+
+    document.getElementById("slabRate").textContent =
+      `${formatNumber(slab.rate)} pts/unit`;
+
+    document.getElementById("slabPoints").textContent =
+      formatNumber(slabPoints);
+
+    // Bonus booster
+    document.getElementById("boosterFormula").textContent =
+      booster.formula;
+
+    document.getElementById("boosterRate").textContent =
+      `+${formatNumber(booster.rate)} pts/unit`;
+
+    document.getElementById("boosterPoints").textContent =
+      formatNumber(booster.points);
+
+    // Total and average
+    document.getElementById("averageFormula").textContent =
+      averagePoints === null
+        ? "Average: —"
+        : `Average: ${formatNumber(averagePoints)} pts/unit`;
+
+    document.getElementById("breakdownTotal").textContent =
+      formatNumber(totalPoints);
+
+    // PolyRatan coins
+    document.getElementById("coinsFormula").textContent =
+      `${formatNumber(totalUnits)} total units × 60`;
+
+    document.getElementById("coinsBreakdown").textContent =
+      formatNumber(coins);
+  }
+
+  // Recalculate whenever either input changes.
+  premiumInput.addEventListener("input", updateCalculator);
+  superPremiumInput.addEventListener("input", updateCalculator);
+
+  // Initial calculation on page load.
+  updateCalculator();
+</script>
+</body>
+</html>
