@@ -359,7 +359,7 @@ td:last-child {
     <h1>Quarterly Sales Reward Calculator</h1>
     <p>
       Enter sales units in the two highlighted fields below.
-      All reward calculations will update automatically.
+      All reward calculations update automatically.
     </p>
   </header>
 
@@ -415,8 +415,8 @@ td:last-child {
 
     <div class="metric primary">
       <div class="metric-label">Total Reward Points</div>
-      <div class="metric-value" id="totalPoints">1,325</div>
-      <div class="metric-note" id="averagePoints">Average: 53 points/unit</div>
+      <div class="metric-value" id="totalPoints">2,900</div>
+      <div class="metric-note" id="averagePoints">Average: 116 points/unit</div>
     </div>
 
     <div class="metric">
@@ -469,11 +469,11 @@ td:last-child {
             <td>Telescopic Slabs (Tiered)</td>
             <td id="slabFormula">Slab 15–29</td>
             <td id="slabRate">50 pts/unit</td>
-            <td id="slabPoints">—</td>
+            <td id="slabPoints">900</td>
           </tr>
 
           <tr>
-            <td>Bonus Booster (Above 100)</td>
+            <td>Bonus Booster (All Units)</td>
             <td id="boosterFormula">Starts at 101+ units</td>
             <td id="boosterRate">+0 pts/unit</td>
             <td id="boosterPoints">0</td>
@@ -481,9 +481,9 @@ td:last-child {
 
           <tr class="total-row">
             <td>Total Reward Points Earned</td>
-            <td id="averageFormula">Average: 53 pts/unit</td>
+            <td id="averageFormula">Average: 116 pts/unit</td>
             <td>—</td>
-            <td id="breakdownTotal">1,325</td>
+            <td id="breakdownTotal">2,900</td>
           </tr>
 
           <tr class="coins-row">
@@ -526,12 +526,12 @@ td:last-child {
       </div>
 
       <div class="reference-item">
-        <strong>Bonus Booster Slabs</strong>
+        <strong>Bonus Booster Slabs (All Units)</strong>
         <span>
           0–100 units: No bonus<br>
-          101–150 units: +25 pts/unit<br>
-          151–200 units: +50 pts/unit<br>
-          201+ units: +75 pts/unit
+          101–150 total units: +25 pts/unit on all units<br>
+          151–200 total units: +50 pts/unit on all units<br>
+          201+ total units: +75 pts/unit on all units
         </span>
       </div>
 
@@ -606,6 +606,8 @@ td:last-child {
     );
   }
 
+  // The workbook's bonus booster rate applies to ALL combined units
+  // once the combined sales total exceeds 100.
   function calculateBooster(units) {
     if (units <= 100) {
       return {
@@ -630,9 +632,9 @@ td:last-child {
     }
 
     return {
-      formula: `${tier} (${units - 100} units)`,
+      formula: `${tier} (all ${units} units)`,
       rate: rate,
-      points: (units - 100) * rate
+      points: units * rate
     };
   }
 
